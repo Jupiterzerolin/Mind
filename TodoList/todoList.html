@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>TodoList</title>
+		<link rel="stylesheet" href="bootstrap.css" />
+		<style type="text/css">
+			.del {
+				/* 完成任务样式 */
+				text-decoration: line-through;
+				color: #cccccc !important;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="app">
+			<!-- 导航条 -->
+			<nav class="navbar navbar-inverse">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="#">
+							Todolist
+						</a>
+					</div>
+				</div>
+			</nav>
+			<!-- 应用容器 -->
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="panel panel-warning">
+							<div class="panel-heading">
+								<!-- 计算待办事项 -->
+								<h3>您有{{ count }}个待办事项 !</h3>
+								<!-- 数据双向绑定
+								 响应键盘回车事件，实现添加功能-->
+								<input type="text" class="form-control" placeholder="请添加待办事项" v-model="title" @keyup.13="add" />
+							</div>
+							<div class="panel-body">
+								<ul class="list-group">
+									<!-- 循环显示数据
+									 列表项响应鼠标双击事件，记忆所点击选项功能-->
+									<li class="list-group-item" v-for="(todo,index) in filterTodos" @dblclick="remember(todo)">
+										<!-- 复选框根据对象的isSelected属性表现是否选中状态 -->
+										<input type="checkbox" v-model="todo.isSelected" />
+										<span :class="{del:todo.isSelected }" v-show="cur!=todo">
+											{{ todo.title }}
+										</span>
+										<!-- 响应键盘事件；获取焦点，实现编辑功能 -->
+										<input type="text" v-model="todo.title" v-show="cur==todo" @keyup.enter="ok" @blur="ok" v-focus="cur==todo" />
+										<!-- 响应鼠标点击事件，删除列表项 -->
+										<button class="pull-right btn btn-danger btn-xs" @click="remove(todo)">&times;</button>
+									</li>
+								</ul>
+							</div>
+							<div class="panel-footer">
+								<ul class="nav nav-pills">
+									<!-- 切换组件，计算不同状态的任务 -->
+									<li role="presentation" :class="{active: hash==='all'}"><a href="#/all">全部</a></li>
+									<li role="presentation" :class="{active: hash==='finished'}"><a href="#/finished">已完成</a></li>
+									<li role="presentation" :class="{active: hash==='unfinish'}"><a href="#/unfinish">未完成</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+			<script src="todoList.js"></script>
+	</body>
+</html>
